@@ -1,6 +1,7 @@
 #include "scalar_function.hpp"
 
 #include <fstream>
+#include <cassert>
 #include <iostream>
 
 ScalarFunction::ScalarFunction(uint32_t width, uint32_t height, float base_value)
@@ -16,12 +17,24 @@ ScalarFunction::ScalarFunction(const std::string &pgm_file_path)
 
 float &ScalarFunction::operator()(float x, float y)
 {
-	return m_data[0];
+	assert(x <= 1.0f && x >= -1.0f);
+	assert(y <= 1.0f && y >= -1.0f);
+
+	float x_pxl_coord = (x + 1.0f) * ((float)m_width/2.0f);
+	float y_pxl_coord = (y + 1.0f) * ((float)m_height/2.0f);
+	
+	return m_data[(int)y_pxl_coord *m_height + (int)x_pxl_coord];
 }
 
 float ScalarFunction::operator()(float x, float y) const
 {
-	return m_data[0];
+	assert(x <= 1.0f && x >= -1.0f);
+	assert(y <= 1.0f && y >= -1.0f);
+
+	float x_pxl_coord = (x + 1.0f) * ((float)m_width/2.0f);
+	float y_pxl_coord = (y + 1.0f) * ((float)m_height/2.0f);
+
+	return m_data[(int)y_pxl_coord *m_height + (int)x_pxl_coord];
 }
 
 bool ScalarFunction::save_to_pgm(const std::string &path)
