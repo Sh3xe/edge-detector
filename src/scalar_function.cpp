@@ -1,8 +1,10 @@
 #include "scalar_function.hpp"
+#include "Parameters.hpp"
 
 #include <fstream>
 #include <cassert>
 #include <iostream>
+
 
 ScalarFunction::ScalarFunction(uint32_t width, uint32_t height, float base_value)
 {
@@ -14,6 +16,128 @@ ScalarFunction::ScalarFunction(const std::string &pgm_file_path)
 	if(!load_from_pgm(pgm_file_path))
 		construct_constant(128, 128, 0.0f);
 }
+
+float &ScalarFunction::Gradient_x(float x,float y, int a){
+	
+	float Grad_x=0;
+
+	if(x+a*eps>= 1.0f){
+
+		Grad_x = ((*this)(x-a*eps,y)-( *this)(x,y))/(a*eps);
+
+
+	}else{
+
+		if(x+a*eps<= -1.0f){
+
+			Grad_x = ((*this)(x-a*eps,y)-( *this)(x,y))/(a*eps);
+
+
+		}else{
+
+			Grad_x = ((*this)(x+a*eps,y)-( *this)(x,y))/(a*eps);
+
+
+		}
+
+
+	}
+
+	
+	return Grad_x;
+
+}
+
+float &ScalarFunction::Gradient_x(float x,float y){
+
+	float Grad_x=0;
+
+	if(x+eps>= 1.0f){
+
+		Grad_x = ((*this)(x,y)-( *this)(x-eps,y))/(eps);
+
+
+	}else{
+
+		if(x+eps<= -1.0f){
+
+			Grad_x = ((*this)(x,y)-( *this)(x,y))/(eps);
+
+
+
+		}else{
+
+			Grad_x = ((*this)(x+eps,y)-( *this)(x-eps,y))/(eps);
+
+
+		}
+
+
+	}
+
+	return Grad_x;
+
+}
+
+
+float &ScalarFunction::Gradient_y(float x,float y,int a){
+	
+	float Grad_y=0;
+
+	if(y+a*eps>= 1.0f){
+
+		Grad_y = ((*this)(x,y-a*eps)-( *this)(x,y))/(a*eps);
+
+	}else{
+
+		if(y+a*eps<= -1.0f){
+
+			Grad_y = ((*this)(x,y-a*eps)-( *this)(x,y))/(a*eps);
+
+		}else{
+
+			Grad_y = ((*this)(x,y+a*eps)-( *this)(x,y))/(a*eps);
+
+		}
+
+	}
+
+	return Grad_y;
+
+}
+
+float &ScalarFunction::Gradient_y(float x,float y){
+
+	float Grad_y=0;
+
+	
+	if(y+eps>= 1.0f){
+
+		Grad_y = ((*this)(x,y)-( *this)(x,y-eps))/(eps);
+
+
+	}else{
+
+		if(y+eps<= -1.0f){
+
+			Grad_y = ((*this)(x,y)-(*this)(x,y))/(eps);
+
+
+
+		}else{
+
+			Grad_y = ((*this)(x,y+eps)-( *this)(x,y-eps))/(eps);
+
+
+		}
+
+
+	}
+	return Grad_y;
+
+
+}
+
 
 float &ScalarFunction::operator()(float x, float y)
 {
