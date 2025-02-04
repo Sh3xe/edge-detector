@@ -89,6 +89,8 @@ public:
 	 */
 	bool load_from_pgm(const std::string &path);
 
+	bool save_with_colored_border(const std::string &path, double border_r=0.0, double border_g=1.0, double border_b=0.0, uint32_t border_width=3);
+
 private:
 	void clear();
 	void construct_constant(uint32_t width, uint32_t height, double base_value);

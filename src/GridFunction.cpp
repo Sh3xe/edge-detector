@@ -198,6 +198,56 @@ void GridFunction::reverse_y()
 	}
 }
 
+bool GridFunction::save_with_colored_border(const std::string &path, double border_r, double border_g, double border_b, unsigned border_width)
+{
+	std::fstream file {path, std::ios::out};
+
+	if( !file )
+	{
+		std::cout << "Cannot open: \"" << path << "\"" << std::endl;
+		return false;
+	}
+
+	file << "P3\n";
+	file << m_width << " " << m_height << " " << 255 << "\n";
+
+	for( uint32_t j  = 0; j < m_height; j++) {
+		for( uint32_t i  = 0; i < m_width; i++) {
+			double grayscale_value = (*this)(i,j);
+			
+			double min_val = grayscale_value;
+			double max_val = grayscale_value;
+
+			// Check if we are in a border in a border_width px area
+			for(int dx = -(border_width/2); dx <= (int)(border_width/2); ++dx)
+			for(int dy = -(border_width/2); dy <= (int)(border_width/2); ++dy)
+			{
+				if(i+dx < 0 || i+dx >= m_width || j+dy < 0 || j+dy >= m_height)
+					continue;
+
+				if((*this)(i+dx,j+dy) > max_val)
+					max_val = (*this)(i+dx,j+dy);
+
+				if((*this)(i+dx,j+dy) < min_val)
+					min_val = (*this)(i+dx,j+dy);
+			}
+
+
+			if (abs(max_val - min_val) > 0.01) 
+			{
+				file << (int)(border_r*255) << " " << (int)(border_g*255) << " " << (int)(border_b*255) << " ";
+			}
+			else 
+			{
+				file << (int)(grayscale_value*255) << " " << (int)(grayscale_value*255) << " " << (int)(grayscale_value*255) << " ";
+			}
+		}
+		file << "\n";
+	}
+
+	return true;
+}
+
 GridFunction create_circle_image(uint32_t img_size, double diam_percent, double outside_color, double inside_color)
 {
 	GridFunction img(img_size, img_size, outside_color);
