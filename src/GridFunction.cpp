@@ -1,167 +1,93 @@
-#include "scalar_function.hpp"
+#include "ScalarFunction.hpp"
 #include "Parameters.hpp"
 
 #include <fstream>
 #include <cassert>
 #include <iostream>
 
-
-ScalarFunction::ScalarFunction(uint32_t width, uint32_t height, float base_value)
+GridFunction::GridFunction(uint32_t width, uint32_t height, double base_value)
 {
 	construct_constant(width, height, base_value);
 }
 	
-ScalarFunction::ScalarFunction(const std::string &pgm_file_path)
+GridFunction::GridFunction(const std::string &pgm_file_path)
 {
 	if(!load_from_pgm(pgm_file_path))
 		construct_constant(128, 128, 0.0f);
 }
 
-float &ScalarFunction::Gradient_x(float x,float y, int a){
-	
-	float Grad_x=0;
+GridFunction::GridFunction(const std::string &pgm_file_path, uint32_t rescale_width, uint32_t rescale_height)
+{
+
+}
+
+double GridFunction::gradient_x(double x,double y, int a)
+{
+	double Grad_x=0;
 
 	if(x+a*eps>= 1.0f){
-
 		Grad_x = ((*this)(x-a*eps,y)-( *this)(x,y))/(a*eps);
-
-
 	}else{
-
 		if(x+a*eps<= -1.0f){
-
 			Grad_x = ((*this)(x-a*eps,y)-( *this)(x,y))/(a*eps);
-
-
 		}else{
-
 			Grad_x = ((*this)(x+a*eps,y)-( *this)(x,y))/(a*eps);
-
-
 		}
-
-
 	}
 
-	
 	return Grad_x;
-
 }
 
-float &ScalarFunction::Gradient_x(float x,float y){
-
-	float Grad_x=0;
+double GridFunction::gradient_x(double x,double y)
+{
+	double Grad_x=0;
 
 	if(x+eps>= 1.0f){
-
 		Grad_x = ((*this)(x,y)-( *this)(x-eps,y))/(eps);
-
-
 	}else{
-
 		if(x+eps<= -1.0f){
-
 			Grad_x = ((*this)(x,y)-( *this)(x,y))/(eps);
-
-
-
 		}else{
-
 			Grad_x = ((*this)(x+eps,y)-( *this)(x-eps,y))/(eps);
-
-
 		}
-
-
 	}
-
 	return Grad_x;
-
 }
 
-
-float &ScalarFunction::Gradient_y(float x,float y,int a){
-	
-	float Grad_y=0;
+double GridFunction::gradient_y(double x,double y,int a)
+{
+	double Grad_y=0;
 
 	if(y+a*eps>= 1.0f){
-
 		Grad_y = ((*this)(x,y-a*eps)-( *this)(x,y))/(a*eps);
-
 	}else{
-
 		if(y+a*eps<= -1.0f){
-
 			Grad_y = ((*this)(x,y-a*eps)-( *this)(x,y))/(a*eps);
-
 		}else{
-
 			Grad_y = ((*this)(x,y+a*eps)-( *this)(x,y))/(a*eps);
-
 		}
-
 	}
 
 	return Grad_y;
-
 }
 
-float &ScalarFunction::Gradient_y(float x,float y){
+double GridFunction::gradient_y(double x,double y){
+	double Grad_y=0;
 
-	float Grad_y=0;
-
-	
 	if(y+eps>= 1.0f){
-
 		Grad_y = ((*this)(x,y)-( *this)(x,y-eps))/(eps);
-
-
 	}else{
-
 		if(y+eps<= -1.0f){
-
 			Grad_y = ((*this)(x,y)-(*this)(x,y))/(eps);
-
-
-
 		}else{
-
 			Grad_y = ((*this)(x,y+eps)-( *this)(x,y-eps))/(eps);
-
-
 		}
-
-
 	}
+
 	return Grad_y;
-
-
 }
 
-
-float &ScalarFunction::operator()(float x, float y)
-{
-	assert(x <= 1.0f && x >= -1.0f);
-	assert(y <= 1.0f && y >= -1.0f);
-
-	float x_pxl_coord = (x + 1.0f) * ((float)m_width/2.0f);
-	float y_pxl_coord = (y + 1.0f) * ((float)m_height/2.0f);
-	
-	return m_data[(int)y_pxl_coord *m_height + (int)x_pxl_coord];
-}
-
-float ScalarFunction::operator()(float x, float y) const
-{
-	assert(x <= 1.0f && x >= -1.0f);
-	assert(y <= 1.0f && y >= -1.0f);
-
-	float x_pxl_coord = (x + 1.0f) * ((float)m_width/2.0f);
-	float y_pxl_coord = (y + 1.0f) * ((float)m_height/2.0f);
-
-	return m_data[(int)y_pxl_coord *m_height + (int)x_pxl_coord];
-}
-
-bool ScalarFunction::save_to_pgm(const std::string &path)
+bool GridFunction::save_to_pgm(const std::string &path)
 {
 	std::fstream file {path, std::ios::out};
 
@@ -184,7 +110,7 @@ bool ScalarFunction::save_to_pgm(const std::string &path)
 	return true;
 }
 
-bool ScalarFunction::load_from_pgm(const std::string &path)
+bool GridFunction::load_from_pgm(const std::string &path)
 {
 	std::fstream file {path};
 	
@@ -211,7 +137,7 @@ bool ScalarFunction::load_from_pgm(const std::string &path)
 			for( int i = 0; i < width; i++) {
 				int pixel;
 				file >> pixel;
-				m_data[i+j*width] = (float)pixel / (float)interval;
+				m_data[i+j*width] = (double)pixel / (double)interval;
 			}
 		}
 	}
@@ -221,7 +147,7 @@ bool ScalarFunction::load_from_pgm(const std::string &path)
 			for( int i = 0; i < width; i++) {
 				int r, g, b;
 				file >> r >> g >> b;
-				m_data[i+j*width] = ((float)r / (float)interval) * 0.3 + ((float)g / (float)interval) * 0.59 + ((float)b / (float)interval) * 0.11;
+				m_data[i+j*width] = ((double)r / (double)interval) * 0.3 + ((double)g / (double)interval) * 0.59 + ((double)b / (double)interval) * 0.11;
 			}
 		}
 	}
@@ -230,14 +156,14 @@ bool ScalarFunction::load_from_pgm(const std::string &path)
 	return true;
 }
 
-void ScalarFunction::clear()
+void GridFunction::clear()
 {
 	m_data.clear();
 	m_width = 0;
 	m_height = 0;
 }
 
-void ScalarFunction::construct_constant(uint32_t width, uint32_t height, float base_value = 0.0f)
+void GridFunction::construct_constant(uint32_t width, uint32_t height, double base_value = 0.0f)
 {
 	this->clear();
 
