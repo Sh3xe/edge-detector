@@ -2,6 +2,8 @@
 #include<math.h>
 #include<stdio.h>
 
+const float eps = 0.00001;
+
 struct Parameters{
 
     long double epsilon=0;

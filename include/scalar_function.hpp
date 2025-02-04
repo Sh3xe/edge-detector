@@ -19,6 +19,10 @@ public:
 	inline const uint32_t get_width() const {return m_width;}
 	inline const uint32_t get_height() const {return m_height;}
 
+	float &Gradient_x(float x,float y, int a);
+
+	float &Gradient_y(float x,float y, int a);
+
 	/**
 	 * @brief  
 	 * 
@@ -54,6 +58,9 @@ public:
 	 * @return false in case of failure
 	 */
 	bool load_from_pgm(const std::string &path);
+
+
+
 
 private:
 	void clear();
