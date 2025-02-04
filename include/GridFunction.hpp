@@ -33,13 +33,25 @@ public:
 
 	inline uint32_t get_height() const { return m_height; }
 
-	double gradient_x(double x,double y, int a=1);
+	/**
+	 * @brief  
+	 * 
+	 * @param x between 0 and m_width-1
+	 * @param y between 0 and height-1
+	 * @return double The value of the Gradient at that point regarding the point foward(+) , backward(-) or both(0)
+	 */
+	double gradient_x(uint32_t x,uint32_t y, char s);
 
-	double gradient_x(double x,double y);
 
-	double gradient_y(double x,double y, int a=1);
+	double gradient_y(uint32_t x,uint32_t y, char s);
 
-	double gradient_y(double x,double y);
+	/**
+	 * @brief  
+	 * 
+	 * @param I_WILL_CHOSE std_vector or grid_function (After I will change this)
+	 * @return The value of the integral over the area where the 
+	 */
+	double Integral();
 
 	/**
 	 * @brief On the images stored in a computer, the (0,0) point typically corresponds to the top-left corner instead of the bottom-left corner like in mathematics. Use this function to return the image around its x axis
