@@ -1,9 +1,10 @@
-#include "ScalarFunction.hpp"
+#include "GridFunction.hpp"
 #include "Parameters.hpp"
 
 #include <fstream>
 #include <cassert>
 #include <iostream>
+#include <cmath>
 
 GridFunction::GridFunction(uint32_t width, uint32_t height, double base_value)
 {
@@ -13,12 +14,24 @@ GridFunction::GridFunction(uint32_t width, uint32_t height, double base_value)
 GridFunction::GridFunction(const std::string &pgm_file_path)
 {
 	if(!load_from_pgm(pgm_file_path))
+	{
+		std::cout << "Failed to load PGM Image, constructing empty 128x128 Image" << std::endl;
 		construct_constant(128, 128, 0.0f);
+	}
 }
 
 GridFunction::GridFunction(const std::string &pgm_file_path, uint32_t rescale_width, uint32_t rescale_height)
 {
+	GridFunction image(pgm_file_path);
+	construct_constant(rescale_width, rescale_height, 0.0);
 
+	for(uint32_t x = 0; x < m_width; ++x)
+	for(uint32_t y = 0; y < m_height; ++y)
+	{
+		uint32_t x_img = round((double)(x * image.get_width()) / (double)m_width);
+		uint32_t y_img = round((double)(y * image.get_height()) / (double)m_height);
+		m_data[x+y*m_width] = image(x_img, y_img);
+	}
 }
 
 double GridFunction::gradient_x(double x,double y, int a)
@@ -100,8 +113,8 @@ bool GridFunction::save_to_pgm(const std::string &path)
 	file << "P2\n";
 	file << m_width << " " << m_height << " " << 255 << "\n";
 
-	for( int j  = 0; j < m_height; j++) {
-		for( int i  = 0; i < m_width; i++) {
+	for( uint32_t j  = 0; j < m_height; j++) {
+		for( uint32_t i  = 0; i < m_width; i++) {
 			file << (int)(m_data[j*m_height + i] * 255) << " ";
 		}
 		file << "\n";
@@ -131,10 +144,11 @@ bool GridFunction::load_from_pgm(const std::string &path)
 
 	this->construct_constant(width, height, 0.0f);
 
-	if( is_rgb )
+	if( !is_rgb )
 	{
-		for( int j = 0; j < height; j++) {
-			for( int i = 0; i < width; i++) {
+		// Load grayscale image
+		for( int i = 0; i < width; i++) {	
+			for( int j = 0; j < height; j++) {
 				int pixel;
 				file >> pixel;
 				m_data[i+j*width] = (double)pixel / (double)interval;
@@ -143,6 +157,7 @@ bool GridFunction::load_from_pgm(const std::string &path)
 	}
 	else
 	{
+		// Load RGB image and convert to "human" grayscale (use different weights for r,g and b channels)
 		for( int j = 0; j < height; j++) {
 			for( int i = 0; i < width; i++) {
 				int r, g, b;
@@ -170,4 +185,20 @@ void GridFunction::construct_constant(uint32_t width, uint32_t height, double ba
 	m_width = width;
 	m_height = height;
 	m_data.resize(width*height, base_value);
+}
+
+GridFunction create_circle_image(uint32_t img_size, double diam_percent, double outside_color, double inside_color)
+{
+	GridFunction img(img_size, img_size, outside_color);
+	uint32_t half_img_size = img_size / 2;
+	double radius_squared = (img_size*img_size*diam_percent*diam_percent) / 4.0;
+
+	for(uint32_t x = 0; x < img_size; ++x)
+	for(uint32_t y = 0; y < img_size; ++y)
+	{
+		if( (x - half_img_size)*(x - half_img_size) + (y - half_img_size)*(y - half_img_size) <= radius_squared)
+			img(x,y) = inside_color;
+	}
+
+	return img;
 }

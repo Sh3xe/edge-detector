@@ -29,9 +29,9 @@ public:
 	 */
 	GridFunction(const std::string &pgm_file_path);
 
-	inline const uint32_t get_width() const { return m_width; }
+	inline uint32_t get_width() const { return m_width; }
 
-	inline const uint32_t get_height() const { return m_height; }
+	inline uint32_t get_height() const { return m_height; }
 
 	double gradient_x(double x,double y, int a=1);
 
@@ -90,3 +90,14 @@ private:
 	uint32_t m_width = 0, m_height = 0;
 	std::vector<double> m_data;
 };
+
+/**
+ * @brief Create a [img_size x img_size] [inside_color] circle inside a [outside_color] rectangle. The circle's diameter is [diam_percent x img_size]
+ * 
+ * @param width 
+ * @param height 
+ * @param outside_color 
+ * @param inside_color 
+ * @return GridFunction 
+ */
+GridFunction create_circle_image(uint32_t img_size, double diam_percent=1.0, double outside_color = 0.0, double inside_color = 1.0);
