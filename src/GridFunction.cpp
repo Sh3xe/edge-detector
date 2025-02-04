@@ -28,9 +28,9 @@ GridFunction::GridFunction(const std::string &pgm_file_path, uint32_t rescale_wi
 	for(uint32_t x = 0; x < m_width; ++x)
 	for(uint32_t y = 0; y < m_height; ++y)
 	{
-		uint32_t x_img = round((double)(x * image.get_width()) / (double)m_width);
-		uint32_t y_img = round((double)(y * image.get_height()) / (double)m_height);
-		m_data[x+y*m_width] = image(x_img, y_img);
+		uint32_t x_img = ((double)(x * image.get_width()) / (double)m_width);
+		uint32_t y_img = ((double)(y * image.get_height()) / (double)m_height);
+		(*this)(x,y) = image(x_img, y_img);
 	}
 }
 
@@ -115,7 +115,7 @@ bool GridFunction::save_to_pgm(const std::string &path)
 
 	for( uint32_t j  = 0; j < m_height; j++) {
 		for( uint32_t i  = 0; i < m_width; i++) {
-			file << (int)(m_data[j*m_height + i] * 255) << " ";
+			file << (int)((*this)(i,j) * 255) << " ";
 		}
 		file << "\n";
 	}
@@ -151,7 +151,7 @@ bool GridFunction::load_from_pgm(const std::string &path)
 			for( int j = 0; j < height; j++) {
 				int pixel;
 				file >> pixel;
-				m_data[i+j*width] = (double)pixel / (double)interval;
+				(*this)(i,j) = (double)pixel / (double)interval;
 			}
 		}
 	}
@@ -162,7 +162,7 @@ bool GridFunction::load_from_pgm(const std::string &path)
 			for( int i = 0; i < width; i++) {
 				int r, g, b;
 				file >> r >> g >> b;
-				m_data[i+j*width] = ((double)r / (double)interval) * 0.3 + ((double)g / (double)interval) * 0.59 + ((double)b / (double)interval) * 0.11;
+				(*this)(i,j) = ((double)r / (double)interval) * 0.3 + ((double)g / (double)interval) * 0.59 + ((double)b / (double)interval) * 0.11;
 			}
 		}
 	}
@@ -185,6 +185,17 @@ void GridFunction::construct_constant(uint32_t width, uint32_t height, double ba
 	m_width = width;
 	m_height = height;
 	m_data.resize(width*height, base_value);
+}
+
+void GridFunction::reverse_y()
+{
+	for(uint32_t x = 0; x < m_width; ++x)
+	for(uint32_t y = 0; y < (m_height/2)+1; ++y)
+	{
+		double tmp = (*this)(x,y);
+		(*this)(x, y) = (*this)(x, m_height - y);
+		(*this)(x, m_height - y) = tmp;
+	}
 }
 
 GridFunction create_circle_image(uint32_t img_size, double diam_percent, double outside_color, double inside_color)

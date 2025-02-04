@@ -42,6 +42,12 @@ public:
 	double gradient_y(double x,double y);
 
 	/**
+	 * @brief On the images stored in a computer, the (0,0) point typically corresponds to the top-left corner instead of the bottom-left corner like in mathematics. Use this function to return the image around its x axis
+	 * 
+	 */
+	void reverse_y();
+
+	/**
 	 * @brief  
 	 * 
 	 * @param x between 0 and width-1
@@ -50,7 +56,7 @@ public:
 	 */
 	inline double operator()(uint32_t x, uint32_t y) const
 	{
-		return m_data[x + y*m_height];
+		return m_data[x + y*m_width];
 	}
 
 	/**
@@ -62,7 +68,7 @@ public:
 	 */
 	inline double &operator()(uint32_t x, uint32_t y)
 	{
-		return m_data[x + y*m_height];
+		return m_data[x + y*m_width];
 	}
 
 	/**
