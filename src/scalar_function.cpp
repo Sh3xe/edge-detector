@@ -1,8 +1,8 @@
-#include "scalar_function.hpp"
-
 #include <fstream>
 #include <cassert>
 #include <iostream>
+
+# include "../include/scalar_function.hpp"
 
 ScalarFunction::ScalarFunction(uint32_t width, uint32_t height, float base_value)
 {

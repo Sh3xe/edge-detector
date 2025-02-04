@@ -16,6 +16,9 @@ public:
 
 	ScalarFunction(const std::string &pgm_file_path);
 
+	inline const uint32_t get_width() const {return m_width;}
+	inline const uint32_t get_height() const {return m_height;}
+
 	/**
 	 * @brief  
 	 * 
