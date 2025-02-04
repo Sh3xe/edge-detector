@@ -34,71 +34,138 @@ GridFunction::GridFunction(const std::string &pgm_file_path, uint32_t rescale_wi
 	}
 }
 
-double GridFunction::gradient_x(double x,double y, int a)
+
+
+double GridFunction::gradient_x(uint32_t x,uint32_t y, char a)
 {
 	double Grad_x=0;
 
-	if(x+a*eps>= 1.0f){
-		Grad_x = ((*this)(x-a*eps,y)-( *this)(x,y))/(a*eps);
-	}else{
-		if(x+a*eps<= -1.0f){
-			Grad_x = ((*this)(x-a*eps,y)-( *this)(x,y))/(a*eps);
+
+	if(a == '+'){
+
+
+		if(x== m_width-1){
+
+			Grad_x = 0;
+
 		}else{
-			Grad_x = ((*this)(x+a*eps,y)-( *this)(x,y))/(a*eps);
+
+			Grad_x = (*this)(x+1,y) - (*this)(x,y);
+
 		}
+		
+
 	}
+
+	if(a== '-'){
+
+		if(x== 0){
+
+			Grad_x = 0;
+
+		}else{
+
+			Grad_x = (*this)(x-1,y) - (*this)(x,y);
+
+		}
+		
+
+	}
+
+
+	if(a=='0'){
+
+		if(x==0){
+			
+			return gradient_x(x,y,'+');
+		}
+
+		if(x==m_width-1){
+
+			return gradient_x(x,y,'-');
+
+		}
+
+		Grad_x =  ((*this)(x+1,y) - (*this)(x-1,y))/2;
+
+	}
+	
 
 	return Grad_x;
 }
 
-double GridFunction::gradient_x(double x,double y)
-{
-	double Grad_x=0;
-
-	if(x+eps>= 1.0f){
-		Grad_x = ((*this)(x,y)-( *this)(x-eps,y))/(eps);
-	}else{
-		if(x+eps<= -1.0f){
-			Grad_x = ((*this)(x,y)-( *this)(x,y))/(eps);
-		}else{
-			Grad_x = ((*this)(x+eps,y)-( *this)(x-eps,y))/(eps);
-		}
-	}
-	return Grad_x;
-}
-
-double GridFunction::gradient_y(double x,double y,int a)
+double GridFunction::gradient_y(uint32_t x,uint32_t y,char a)
 {
 	double Grad_y=0;
 
-	if(y+a*eps>= 1.0f){
-		Grad_y = ((*this)(x,y-a*eps)-( *this)(x,y))/(a*eps);
-	}else{
-		if(y+a*eps<= -1.0f){
-			Grad_y = ((*this)(x,y-a*eps)-( *this)(x,y))/(a*eps);
+	
+	if(a == '+'){
+
+		if(y== m_height-1){
+
+			Grad_y = 0;
+
 		}else{
-			Grad_y = ((*this)(x,y+a*eps)-( *this)(x,y))/(a*eps);
+
+			Grad_y = (*this)(x,y+1) - (*this)(x,y);
+
 		}
+		
+		
+
 	}
 
+	if(a== '-'){
+
+		if(y == 0){
+
+			Grad_y = 0;
+
+		}else{
+
+			Grad_y = (*this)(x,y-1) - (*this)(x,y);
+
+		}
+
+	}
+
+
+	if(a=='0'){
+
+		if(y==0){
+			
+			return gradient_y(x,y,'+');
+		}
+
+		if(y==m_height-1){
+
+			return gradient_y(x,y,'-');
+
+		}
+
+
+
+		Grad_y = ((*this)(x,y+1) - (*this)(x,y-1))/2;
+
+	}
+	
 	return Grad_y;
 }
 
-double GridFunction::gradient_y(double x,double y){
-	double Grad_y=0;
 
-	if(y+eps>= 1.0f){
-		Grad_y = ((*this)(x,y)-( *this)(x,y-eps))/(eps);
-	}else{
-		if(y+eps<= -1.0f){
-			Grad_y = ((*this)(x,y)-(*this)(x,y))/(eps);
-		}else{
-			Grad_y = ((*this)(x,y+eps)-( *this)(x,y-eps))/(eps);
-		}
+double GridFunction::Integral(){
+
+	double sum=0;
+
+	for(int i=0;i<m_data.size();i++){
+
+		sum = sum + m_data[i];
+
 	}
 
-	return Grad_y;
+	return sum;
 }
+
 
 bool GridFunction::save_to_pgm(const std::string &path)
 {
