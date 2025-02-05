@@ -153,19 +153,109 @@ double GridFunction::gradient_y(uint32_t x,uint32_t y,char a)
 }
 
 
-double GridFunction::Integral(){
+std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> GridFunction::Inside_Outside(){
 
-	double sum=0;
+	std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> Results;
+	std::vector<std::pair<uint32_t,uint32_t>> Points_1;
+	std::vector<std::pair<uint32_t,uint32_t>> Points_0;
+	std::pair<uint32_t,uint32_t> par;
 
-	for(int i=0;i<m_data.size();i++){
+	
 
-		sum = sum + m_data[i];
+	for(size_t i=0;i<m_data.size();i++){
+		if(m_data[i]>0){
+
+			uint32_t j = (uint32_t)i;
+			uint32_t x =0;
+			uint32_t y =0;
+
+			while (j>= m_width)
+			{
+				y = y+1;
+				j = j-m_width;
+			}
+			
+			x = j;
+
+			par = std::make_pair(x,y);
+
+			Points_1.push_back(par);
+
+		}else{
+
+			uint32_t j = (uint32_t)i;
+			uint32_t x =0;
+			uint32_t y =0;
+
+			while (j>= m_width)
+			{
+				y = y+1;
+				j = j-m_width;
+			}
+			
+			x = j;
+
+			par = std::make_pair(x,y);
+
+			Points_0.push_back(par);
+
+		}
+		
+	}
+
+	Results[0] = Points_0;
+	Results[1] = Points_1;
+
+	return Results;
+}
+
+
+double GridFunction::C_positive(GridFunction phi){
+
+	double sum_numerator  =  0;
+	double sum_denominator = 0;
+	double epsilon = 2.220446049250313e-16; 
+
+	std::vector<std::pair<uint32_t,uint32_t>> Points_1;
+
+	Points_1 = phi.Inside_Outside()[1];
+
+	sum_denominator = (double)Points_1.size() + epsilon;
+
+	for(uint32_t i =0; i< Points_1.size();i++){
+
+		sum_numerator = sum_numerator + (*this)(Points_1[i].first,Points_1[i].second);
 
 	}
 
-	return sum;
+
+	return sum_numerator/sum_denominator;
 }
 
+
+
+
+double GridFunction::C_negative(GridFunction phi){
+
+	double sum_numerator  =  0;
+	double sum_denominator = 0;
+	double epsilon = 2.220446049250313e-16; 
+
+	std::vector<std::pair<uint32_t,uint32_t>> Points_0;
+
+	Points_0 = phi.Inside_Outside()[0];
+
+	sum_denominator = (double)Points_0.size() + epsilon;
+
+	for(uint32_t i =0; i< Points_0.size();i++){
+
+		sum_numerator = sum_numerator + (*this)(Points_0[i].first,Points_0[i].second);
+
+	}
+
+
+	return sum_numerator/sum_denominator;
+}
 
 bool GridFunction::save_to_pgm(const std::string &path)
 {
@@ -289,7 +379,7 @@ bool GridFunction::save_with_colored_border(const std::string &path, double bord
 			for(int dx = -(border_width/2); dx <= (int)(border_width/2); ++dx)
 			for(int dy = -(border_width/2); dy <= (int)(border_width/2); ++dy)
 			{
-				if(i+dx < 0 || i+dx >= m_width || j+dy < 0 || j+dy >= m_height)
+				if((int)i+dx < 0 || i+dx >= m_width || (int)j+dy < 0 || j+dy >= m_height)
 					continue;
 
 				if((*this)(i+dx,j+dy) > max_val)

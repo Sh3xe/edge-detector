@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <map>
 
 /**
  * @brief Represents a scalar function [-1,1]x[-1,1] -> R
@@ -47,12 +48,36 @@ public:
 
 	/**
 	 * @brief  
+	 * I created this map in order to know all the points that value 0 and its respective coordinates
+	 * This is very useful to calculate C+ and C- 
 	 * 
-	 * @param I_WILL_CHOSE std_vector or grid_function (After I will change this)
-	 * @return The value of the integral over the area where the 
+	 * @return A map of points 0 or 1 , that show us the coordinates of the GridFunction where they assume each value
+	 * 
 	 */
-	double Integral();
+	std::map<uint32_t,std::vector<std::pair< uint32_t, uint32_t>>> Inside_Outside();
 
+
+
+	/**
+	 * @brief 
+	 * THE ACTUAL FUNCTION AND THE GRIDFUNCTION NEED TO HAVE THE SAME WIDTH AND HEIGHT OTHERWISE IT WILL NOT WORK
+	 * 
+	 * @return The value o C+ defined in the article 
+	 * 
+	 */
+	double C_positive(GridFunction phi);
+
+
+	/**
+	 * @brief  
+	 * THE ACTUAL FUNCTION AND THE GRIDFUNCTION NEED TO HAVE THE SAME WIDTH AND HEIGHT OTHERWISE IT WILL NOT WORK
+	 * 
+	 * @return The value o C+ defined in the article  
+	 * 
+	 */
+	double C_negative(GridFunction phi);
+
+	
 	/**
 	 * @brief On the images stored in a computer, the (0,0) point typically corresponds to the top-left corner instead of the bottom-left corner like in mathematics. Use this function to return the image around its x axis
 	 * 
@@ -109,6 +134,7 @@ private:
 
 	uint32_t m_width = 0, m_height = 0;
 	std::vector<double> m_data;
+
 };
 
 /**
