@@ -44,6 +44,13 @@ public:
 	double gradient_x(uint32_t x,uint32_t y, char s);
 
 
+	/**
+	 * @brief  
+	 * 
+	 * @param x between 0 and m_width-1
+	 * @param y between 0 and height-1
+	 * @return double The value of the Gradient at that point regarding the point upward(+) , downward(-) or both(0)
+	 */
 	double gradient_y(uint32_t x,uint32_t y, char s);
 
 	/**
@@ -72,11 +79,70 @@ public:
 	 * @brief  
 	 * THE ACTUAL FUNCTION AND THE GRIDFUNCTION NEED TO HAVE THE SAME WIDTH AND HEIGHT OTHERWISE IT WILL NOT WORK
 	 * 
-	 * @return The value o C+ defined in the article  
+	 * @return The value o C- defined in the article  
 	 * 
 	 */
 	double C_negative(GridFunction phi);
 
+
+	// FIRSt WAY OF SOLVING THE EQUATIONS:
+
+	/**
+	 * All the techniques down here help us to implement the article in using the explict way of solving the EDP, it means
+	 * For all the terms related to the time (n+1) we will substitute by (n) except for the term defining a differencial in time(left side)
+	 * 
+	 */
+
+
+
+	/**
+	 * @brief  
+	 * Tool to some and subtract GridFunction and still have a GridFunction, it is used to 
+	 * 
+	 * @return We gonna implement the Nabla_operator, and return a GridFunction made of finite difference between the elements , regarding the foward elements
+	 *  
+	 */
+	GridFunction Gradient_x_pos();
+
+	/**
+	 * @brief  
+	 * Tool to some and subtract GridFunction and still have a GridFunction, it is used to 
+	 * 
+	 * @return We gonna implement the Nabla_operator, and return a GridFunction made of finite difference between the elements , regarding the backward elements
+	 * 
+	 */
+	GridFunction Gradient_x_neg();
+
+	/**
+	 * @brief  
+	 * Tool to some and subtract GridFunction and still have a GridFunction
+	 * 
+	 * @return We gonna implement the Nabla_operator, and return a GridFunction made of finite difference between the elements , regarding the backward and foward elements
+	 * 
+	 */
+	GridFunction Gradient_x_neu();
+
+
+	/**
+	 * @brief  
+	 * Tool to square and take the root of a GridFunction very useful to solve the EDP equation
+	 * 
+	 * @return GridFunction where all the value in (x,y) are now to the power of x
+	 * 
+	 */
+	GridFunction operator ^ (double x);
+
+	/**
+	 * @brief  
+	 * Tool to divide GridFunction used for solving the EDP equation
+	 * 
+	 * @return GridFunction where all the value in (x,y) are now divided by the value of the other GridFunction in (x,y)
+	 */
+	GridFunction operator /(GridFunction phi_2);
+
+
+
+	// SECOND WAY OF SOLVING THE EQUATIONS:
 	
 	/**
 	 * @brief On the images stored in a computer, the (0,0) point typically corresponds to the top-left corner instead of the bottom-left corner like in mathematics. Use this function to return the image around its x axis

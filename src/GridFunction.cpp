@@ -257,6 +257,100 @@ double GridFunction::C_negative(GridFunction phi){
 	return sum_numerator/sum_denominator;
 }
 
+
+//FIRST METHOD TO SOLVE THE ARTICLE , IN THE EXPLICT WAY:
+
+GridFunction GridFunction::Gradient_x_pos(){
+
+	GridFunction phi(m_width, m_height);
+
+	for(uint32_t i=0;i<m_width;i++){
+
+		for(uint32_t j=0;j<m_height;j++){
+
+			phi(i,j)= (*this).gradient_x(i,j,'+');
+
+		}
+
+	}
+
+	return phi;
+};
+
+GridFunction GridFunction::Gradient_x_neg(){
+
+	GridFunction phi(m_width, m_height);
+
+	for(uint32_t i=0;i<m_width;i++){
+
+		for(uint32_t j=0;j<m_height;j++){
+
+			phi(i,j)= (*this).gradient_x(i,j,'-');
+
+		}
+
+	}
+
+	return phi;
+
+}
+
+GridFunction GridFunction::Gradient_x_neu(){
+
+	GridFunction phi(m_width, m_height);
+
+	for(uint32_t i=0;i<m_width;i++){
+
+		for(uint32_t j=0;j<m_height;j++){
+
+			phi(i,j)= 2*(*this).gradient_x(i,j,'0');
+
+		}
+
+	}
+
+	return phi;
+
+}
+
+GridFunction GridFunction::operator ^ (double x){
+
+	GridFunction phi(m_width, m_height);
+
+	for(uint32_t i=0;i<m_width;i++){
+
+		for(uint32_t j=0;j<m_height;j++){
+
+			phi(i,j)= pow((*this)(i,j),x);
+
+		}
+
+	}
+
+	return phi;
+
+}
+
+GridFunction GridFunction::operator /(GridFunction phi_2){
+
+	GridFunction phi(m_width, m_height);
+
+	for(uint32_t i=0;i<m_width;i++){
+
+		for(uint32_t j=0;j<m_height;j++){
+
+			phi(i,j)= phi(i,j)/phi_2(i,j);
+
+		}
+
+	}
+
+	return phi;
+
+}
+
+
+
 bool GridFunction::save_to_pgm(const std::string &path)
 {
 	std::fstream file {path, std::ios::out};
