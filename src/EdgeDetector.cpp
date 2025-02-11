@@ -1,6 +1,9 @@
 #include "EdgeDetector.hpp"
 
-GridFunction EdgeDetector::solve(const GridFunction &image, size_t max_iteration=100)
+#include <cmath>
+#include <cassert>
+
+GridFunction EdgeDetector::solve(const GridFunction &image, size_t max_iteration)
 {
 	double tho=1e10;
 	size_t current_iteration = 0;
@@ -14,23 +17,35 @@ GridFunction EdgeDetector::solve(const GridFunction &image, size_t max_iteration
 		double c_negative = image.C_negative(phi_current);
 
 		// Use euler method for 
-		GridFunction phi_new = calc_step(phi_current);
+		GridFunction phi_new = calc_step(phi_current, c_positive, c_negative);
 
 		// Calculate the error
-		tho = calculate_error(phi_current, phi_new);
+		tho = img_distance(phi_current, phi_new);
 
 		// One step
 		++current_iteration;
-		phi_current = phi_current;
+		phi_current = phi_new;
 	}
+
+	return phi_current;
 }
 
-double EdgeDetector::calculate_error(const GridFunction &phi_old, const GridFunction &phi_new)
+double EdgeDetector::img_distance(const GridFunction &left, const GridFunction &right)
 {
-	
+	assert(left.get_height() == right.get_height() && left.get_width() == right.get_width());
+
+	double integral = 0.0;
+	for(size_t i = 0; i < left.get_width(); ++i)
+	for(size_t j = 0; j < left.get_height(); ++j)
+	{
+		double diff = right(i,j) - left(i,j);
+		integral += diff*diff;
+	}
+
+	return sqrt(integral);
 }
 
-GridFunction EdgeDetector::calc_step(const GridFunction &phi_old)
+GridFunction EdgeDetector::calc_step(const GridFunction &phi_old, double c_positive, double c_negative)
 {
 
 }

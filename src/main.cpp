@@ -3,7 +3,7 @@
 int main()
 {
     GridParameters params;
-    
+
     EdgeDetector edge_detector(params);
 
     GridFunction circle_image = create_circle_image(256, 0.6, 0.2, 1.0);

@@ -63,8 +63,6 @@ public:
 	 */
 	std::map<uint32_t,std::vector<std::pair< uint32_t, uint32_t>>> Inside_Outside() const;
 
-
-
 	/**
 	 * @brief 
 	 * THE ACTUAL FUNCTION AND THE GRIDFUNCTION NEED TO HAVE THE SAME WIDTH AND HEIGHT OTHERWISE IT WILL NOT WORK
