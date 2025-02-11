@@ -2,6 +2,7 @@
 
 #include "Parameters.hpp"
 #include "GridFunction.hpp"
+#include <cmath>
 
 class EdgeDetector
 {
@@ -15,7 +16,7 @@ public:
 private:
 	double calculate_error(const GridFunction &phi_old, const GridFunction &phi_new);
 
-	GridFunction calc_step(const GridFunction &phi_old);
+	GridFunction calc_step(const GridFunction &phi_old,const GridFunction &image,double C_positive,double C_negative);
 
 	GridParameters m_parameters;
 };
