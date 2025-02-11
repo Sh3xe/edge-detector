@@ -6,22 +6,23 @@ const float eps = 0.00001;
 
 struct GridParameters
 {
-    long double epsilon=0;
-    long double mu=0;
-    long double v=0;
-    long double lambda_1=0;
-    long double lambda_2=0;
+    double epsilon=0;
+    double mu=0;
+    double v=0;
+    double lambda_1=0;
+    double lambda_2=0;
+    double tolerance=0.1;
 };
 
 
-long double Heaviside(const GridParameters& Image,const long double x){
+double Heaviside(const GridParameters& Image,const double x){
 
 
     return (0.5+atan(x/Image.epsilon)/M_PIl);
 
 };
 
-long double Dirac(const GridParameters& Image,const long double x){
+double Dirac(const GridParameters& Image,const double x){
 
     return (Image.epsilon/(M_PIl*(Image.epsilon*Image.epsilon+x*x)));
 

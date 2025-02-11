@@ -61,7 +61,7 @@ public:
 	 * @return A map of points 0 or 1 , that show us the coordinates of the GridFunction where they assume each value
 	 * 
 	 */
-	std::map<uint32_t,std::vector<std::pair< uint32_t, uint32_t>>> Inside_Outside();
+	std::map<uint32_t,std::vector<std::pair< uint32_t, uint32_t>>> Inside_Outside() const;
 
 
 
@@ -72,7 +72,7 @@ public:
 	 * @return The value o C+ defined in the article 
 	 * 
 	 */
-	double C_positive(GridFunction phi);
+	double C_positive(const GridFunction &phi) const;
 
 
 	/**
@@ -82,7 +82,7 @@ public:
 	 * @return The value o C- defined in the article  
 	 * 
 	 */
-	double C_negative(GridFunction phi);
+	double C_negative(const GridFunction &phi) const;
 
 
 	// FIRSt WAY OF SOLVING THE EQUATIONS:
@@ -213,3 +213,5 @@ private:
  * @return GridFunction 
  */
 GridFunction create_circle_image(uint32_t img_size, double diam_percent=1.0, double outside_color = 0.0, double inside_color = 1.0);
+
+GridFunction create_sin_image(uint32_t width, uint32_t height, double frequency, double range_min, double range_max);

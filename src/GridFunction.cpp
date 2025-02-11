@@ -153,7 +153,8 @@ double GridFunction::gradient_y(uint32_t x,uint32_t y,char a)
 }
 
 
-std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> GridFunction::Inside_Outside(){
+std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> GridFunction::Inside_Outside() const
+{
 
 	std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> Results;
 	std::vector<std::pair<uint32_t,uint32_t>> Points_1;
@@ -210,7 +211,8 @@ std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> GridFunction::Insid
 }
 
 
-double GridFunction::C_positive(GridFunction phi){
+double GridFunction::C_positive(const GridFunction &phi) const
+{
 
 	double sum_numerator  =  0;
 	double sum_denominator = 0;
@@ -235,7 +237,8 @@ double GridFunction::C_positive(GridFunction phi){
 
 
 
-double GridFunction::C_negative(GridFunction phi){
+double GridFunction::C_negative(const GridFunction &phi) const 
+{
 
 	double sum_numerator  =  0;
 	double sum_denominator = 0;
@@ -513,4 +516,9 @@ GridFunction create_circle_image(uint32_t img_size, double diam_percent, double 
 	}
 
 	return img;
+}
+
+GridFunction create_sin_image(uint32_t width, uint32_t height, double frequency, double range_min, double range_max)
+{
+	return GridFunction(width, height);
 }
