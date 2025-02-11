@@ -41,7 +41,7 @@ public:
 	 * @param y between 0 and height-1
 	 * @return double The value of the Gradient at that point regarding the point foward(+) , backward(-) or both(0)
 	 */
-	double gradient_x(uint32_t x,uint32_t y, char s);
+	double gradient_x(uint32_t x,uint32_t y, char s) const;
 
 
 	/**
@@ -51,7 +51,7 @@ public:
 	 * @param y between 0 and height-1
 	 * @return double The value of the Gradient at that point regarding the point upward(+) , downward(-) or both(0)
 	 */
-	double gradient_y(uint32_t x,uint32_t y, char s);
+	double gradient_y(uint32_t x,uint32_t y, char s) const;
 
 	/**
 	 * @brief  
@@ -100,7 +100,7 @@ public:
 	 * @return We gonna implement the Nabla_operator, and return a GridFunction made of finite difference between the elements , regarding the foward elements
 	 *  
 	 */
-	GridFunction Gradient_x_pos();
+	GridFunction Gradient_x_pos() const;
 
 	/**
 	 * @brief  
@@ -109,7 +109,7 @@ public:
 	 * @return We gonna implement the Nabla_operator, and return a GridFunction made of finite difference between the elements , regarding the backward elements
 	 * 
 	 */
-	GridFunction Gradient_x_neg();
+	GridFunction Gradient_x_neg() const;
 
 	/**
 	 * @brief  
@@ -118,7 +118,7 @@ public:
 	 * @return We gonna implement the Nabla_operator, and return a GridFunction made of finite difference between the elements , regarding the backward and foward elements
 	 * 
 	 */
-	GridFunction Gradient_x_neu();
+	GridFunction Gradient_x_neu() const;
 
 
 	/**
