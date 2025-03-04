@@ -41,7 +41,7 @@ public:
 	 * @param y between 0 and height-1
 	 * @return double The value of the Gradient at that point regarding the point foward(+) , backward(-) or both(0)
 	 */
-	double gradient_x(uint32_t x,uint32_t y, char s);
+	double gradient_x(uint32_t x,uint32_t y, char s) const;
 
 
 	/**
@@ -51,7 +51,7 @@ public:
 	 * @param y between 0 and height-1
 	 * @return double The value of the Gradient at that point regarding the point upward(+) , downward(-) or both(0)
 	 */
-	double gradient_y(uint32_t x,uint32_t y, char s);
+	double gradient_y(uint32_t x,uint32_t y, char s) const;
 
 	/**
 	 * @brief  
@@ -61,9 +61,7 @@ public:
 	 * @return A map of points 0 or 1 , that show us the coordinates of the GridFunction where they assume each value
 	 * 
 	 */
-	std::map<uint32_t,std::vector<std::pair< uint32_t, uint32_t>>> Inside_Outside();
-
-
+	std::map<uint32_t,std::vector<std::pair< uint32_t, uint32_t>>> Inside_Outside() const;
 
 	/**
 	 * @brief 
@@ -72,7 +70,7 @@ public:
 	 * @return The value o C+ defined in the article 
 	 * 
 	 */
-	double C_positive(GridFunction phi);
+	double C_positive(const GridFunction &phi) const;
 
 
 	/**
@@ -82,7 +80,7 @@ public:
 	 * @return The value o C- defined in the article  
 	 * 
 	 */
-	double C_negative(GridFunction phi);
+	double C_negative(const GridFunction &phi) const;
 
 
 	// FIRSt WAY OF SOLVING THE EQUATIONS:
@@ -102,7 +100,7 @@ public:
 	 * @return We gonna implement the Nabla_operator, and return a GridFunction made of finite difference between the elements , regarding the foward elements
 	 *  
 	 */
-	GridFunction Gradient_x_pos();
+	GridFunction Gradient_x_pos() const;
 
 	/**
 	 * @brief  
@@ -111,7 +109,7 @@ public:
 	 * @return We gonna implement the Nabla_operator, and return a GridFunction made of finite difference between the elements , regarding the backward elements
 	 * 
 	 */
-	GridFunction Gradient_x_neg();
+	GridFunction Gradient_x_neg() const;
 
 	/**
 	 * @brief  
@@ -120,7 +118,7 @@ public:
 	 * @return We gonna implement the Nabla_operator, and return a GridFunction made of finite difference between the elements , regarding the backward and foward elements
 	 * 
 	 */
-	GridFunction Gradient_x_neu();
+	GridFunction Gradient_x_neu() const;
 
 
 	/**
@@ -213,3 +211,5 @@ private:
  * @return GridFunction 
  */
 GridFunction create_circle_image(uint32_t img_size, double diam_percent=1.0, double outside_color = 0.0, double inside_color = 1.0);
+
+GridFunction create_sin_image(uint32_t width, uint32_t height, double frequency, double range_min, double range_max);

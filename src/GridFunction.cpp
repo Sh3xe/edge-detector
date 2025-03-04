@@ -36,7 +36,7 @@ GridFunction::GridFunction(const std::string &pgm_file_path, uint32_t rescale_wi
 
 
 
-double GridFunction::gradient_x(uint32_t x,uint32_t y, char a)
+double GridFunction::gradient_x(uint32_t x,uint32_t y, char a) const
 {
 	double Grad_x=0;
 
@@ -94,7 +94,7 @@ double GridFunction::gradient_x(uint32_t x,uint32_t y, char a)
 	return Grad_x;
 }
 
-double GridFunction::gradient_y(uint32_t x,uint32_t y,char a)
+double GridFunction::gradient_y(uint32_t x,uint32_t y,char a) const
 {
 	double Grad_y=0;
 
@@ -153,7 +153,8 @@ double GridFunction::gradient_y(uint32_t x,uint32_t y,char a)
 }
 
 
-std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> GridFunction::Inside_Outside(){
+std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> GridFunction::Inside_Outside() const
+{
 
 	std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> Results;
 	std::vector<std::pair<uint32_t,uint32_t>> Points_1;
@@ -210,7 +211,8 @@ std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> GridFunction::Insid
 }
 
 
-double GridFunction::C_positive(GridFunction phi){
+double GridFunction::C_positive(const GridFunction &phi) const
+{
 
 	double sum_numerator  =  0;
 	double sum_denominator = 0;
@@ -235,7 +237,8 @@ double GridFunction::C_positive(GridFunction phi){
 
 
 
-double GridFunction::C_negative(GridFunction phi){
+double GridFunction::C_negative(const GridFunction &phi) const 
+{
 
 	double sum_numerator  =  0;
 	double sum_denominator = 0;
@@ -260,7 +263,7 @@ double GridFunction::C_negative(GridFunction phi){
 
 //FIRST METHOD TO SOLVE THE ARTICLE , IN THE EXPLICT WAY:
 
-GridFunction GridFunction::Gradient_x_pos(){
+GridFunction GridFunction::Gradient_x_pos() const{
 
 	GridFunction phi(m_width, m_height);
 
@@ -277,7 +280,7 @@ GridFunction GridFunction::Gradient_x_pos(){
 	return phi;
 };
 
-GridFunction GridFunction::Gradient_x_neg(){
+GridFunction GridFunction::Gradient_x_neg() const{
 
 	GridFunction phi(m_width, m_height);
 
@@ -295,7 +298,7 @@ GridFunction GridFunction::Gradient_x_neg(){
 
 }
 
-GridFunction GridFunction::Gradient_x_neu(){
+GridFunction GridFunction::Gradient_x_neu() const{
 
 	GridFunction phi(m_width, m_height);
 
@@ -348,7 +351,6 @@ GridFunction GridFunction::operator /(GridFunction phi_2){
 	return phi;
 
 }
-
 
 
 bool GridFunction::save_to_pgm(const std::string &path)
@@ -513,4 +515,9 @@ GridFunction create_circle_image(uint32_t img_size, double diam_percent, double 
 	}
 
 	return img;
+}
+
+GridFunction create_sin_image(uint32_t width, uint32_t height, double frequency, double range_min, double range_max)
+{
+	return GridFunction(width, height);
 }
