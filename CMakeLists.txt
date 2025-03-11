@@ -7,6 +7,8 @@ project(image_recognition LANGUAGES CXX)
 add_executable( image_recognition
 	${CMAKE_SOURCE_DIR}/src/main.cpp 
 	${CMAKE_SOURCE_DIR}/src/GridFunction.cpp 
+	${CMAKE_SOURCE_DIR}/src/EdgeDetector.cpp
+	${CMAKE_SOURCE_DIR}/src/Parameters.cpp
 )
 
 # Include dir

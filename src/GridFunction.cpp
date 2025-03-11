@@ -400,8 +400,8 @@ bool GridFunction::load_from_pgm(const std::string &path)
 	if( !is_rgb )
 	{
 		// Load grayscale image
-		for( int i = 0; i < width; i++) {	
-			for( int j = 0; j < height; j++) {
+		for( int j = 0; j < height; j++) {
+			for( int i = 0; i < width; i++) {	
 				int pixel;
 				file >> pixel;
 				(*this)(i,j) = (double)pixel / (double)interval;
@@ -519,5 +519,12 @@ GridFunction create_circle_image(uint32_t img_size, double diam_percent, double 
 
 GridFunction create_sin_image(uint32_t width, uint32_t height, double frequency, double range_min, double range_max)
 {
-	return GridFunction(width, height);
+	GridFunction out_image(width, height);
+	for(uint32_t i = 0; i < width; ++i)
+	for(uint32_t j = 0; j < height; ++j)
+	{
+		out_image(i,j) = range_min + (range_max - range_min) * (sin( frequency * ((double)i/(double)width)) + sin( frequency * ((double)j/(double)height)));
+	}
+	
+	return out_image;
 }

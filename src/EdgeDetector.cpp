@@ -1,18 +1,19 @@
 #include "EdgeDetector.hpp"
 
 #include <cmath>
+#include <iostream>
 #include <cassert>
 
 GridFunction EdgeDetector::solve(const GridFunction &image, size_t max_iteration)
 {
-	double tho=1e-10;
+	double tho=1e10;
 	size_t current_iteration = 0;
 
 	GridFunction phi_current = create_sin_image(image.get_width(), image.get_height(), 30.0, 0.0, 1.0);
 
 	GridFunction phi_new(phi_current);
 
-	while(tho < m_parameters.tolerance && current_iteration < max_iteration)
+	while(tho > m_parameters.tolerance && current_iteration < max_iteration)
 	{
 		// Compute C-, and C+
 		double c_positive = image.C_positive(phi_current);
@@ -27,7 +28,15 @@ GridFunction EdgeDetector::solve(const GridFunction &image, size_t max_iteration
 		// One step
 		++current_iteration;
 		phi_current = phi_new;
+
+		if(current_iteration % 10 == 0)
+		{
+			std::cout << tho << " " << m_parameters.tolerance << " " << current_iteration << " " << max_iteration << std::endl;
+			phi_new.save_to_pgm(std::string("inter") + std::to_string(current_iteration) + std::string(".pgm"));
+		}
 	}
+
+	std::cout << "Number of iterations: " << current_iteration << " " << tho << " " << m_parameters.tolerance << std::endl;
 
 	return phi_current;
 }
@@ -49,15 +58,8 @@ double EdgeDetector::img_distance(const GridFunction &left, const GridFunction &
 
 GridFunction EdgeDetector::calc_step(const GridFunction &phi_old,const GridFunction &image,double C_positive,double C_negative,GridFunction &phi)
 {
-
-
-
 	for(uint32_t i=1;i<phi.get_width()-1;i++){
-
-
 		for(uint32_t j=1;j<phi.get_height()-1;j++){
-
-
 			double v1 = m_parameters.mu*phi_old.gradient_x(i,j,'+');
 			double v2 = sqrt(4*pow(phi_old.gradient_y(i,j,'0'),2)+pow(phi_old.gradient_x(i,j,'+'),2)+pow(m_parameters.eta,2));
 
@@ -76,27 +78,18 @@ GridFunction EdgeDetector::calc_step(const GridFunction &phi_old,const GridFunct
 
 			double z = m_parameters.v + m_parameters.lambda_1*pow(image(i,j)-C_negative,2) - m_parameters.lambda_2*pow(image(i,j)-C_positive,2);
 
-			phi(i,j)  = abs(phi_old(i,j) + Dirac(m_parameters,phi_old(i,j))*(v5+w5-z));
-
-
-
+			phi(i,j)  = abs(phi_old(i,j) + m_parameters.delta_t * Dirac(m_parameters,phi_old(i,j))*(v5+w5-z));
 		}
 	}
 
 	for(uint32_t i=0;i<phi.get_width();i++){
-
-
 		phi(i,0) = phi(i,1);
 		phi(i,phi.get_height()-1) = phi(i,phi.get_height()-2);
-
 	}
 
-
 	for(uint32_t j=0;j<phi.get_height();j++){
-
 		phi(0,j) = phi(1,j);
 		phi(phi.get_width()-1,j) = phi(phi.get_width()-2,j);
-
 	}
 
 	return phi;
