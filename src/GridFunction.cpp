@@ -451,6 +451,39 @@ void GridFunction::reverse_y()
 	}
 }
 
+double mean_value(const GridFunction &image)
+{
+	double total = 0.0;
+	for(uint32_t i = 0; i < image.get_width(); ++i)
+	for(uint32_t j = 0; j < image.get_height(); ++j)
+	{
+		total += image(i,j);
+	}
+	
+	return total / (double)(image.get_width() * image.get_height());
+}
+
+GridFunction discretize_colors(const GridFunction &image)
+{
+	GridFunction discretized = image;
+
+	double mean = mean_value(image);
+	for(uint32_t i = 0; i < image.get_width(); ++i)
+	for(uint32_t j = 0; j < image.get_height(); ++j)
+	{
+		if(image(i,j) > mean)
+		{
+			discretized(i,j) = 1.0;
+		}
+		else 
+		{
+			discretized(i,j) = 0.0;
+		}
+	}
+
+	return discretized;
+}
+
 bool GridFunction::save_with_colored_border(const std::string &path, double border_r, double border_g, double border_b, unsigned border_width)
 {
 	std::fstream file {path, std::ios::out};
@@ -486,7 +519,7 @@ bool GridFunction::save_with_colored_border(const std::string &path, double bord
 			}
 
 
-			if (abs(max_val - min_val) > 0.01) 
+			if (abs(max_val - min_val) > 0.1) 
 			{
 				file << (int)(border_r*255) << " " << (int)(border_g*255) << " " << (int)(border_b*255) << " ";
 			}

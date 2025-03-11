@@ -213,3 +213,6 @@ private:
 GridFunction create_circle_image(uint32_t img_size, double diam_percent=1.0, double outside_color = 0.0, double inside_color = 1.0);
 
 GridFunction create_sin_image(uint32_t width, uint32_t height, double frequency, double range_min, double range_max);
+
+
+GridFunction discretize_colors(const GridFunction &image);

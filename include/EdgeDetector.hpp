@@ -18,7 +18,7 @@ public:
 	 * @param max_iteration
 	 * @return GridFunction An image that only takes 2 values: c- in [0,1] if the pixel is considered inside the edge, and c+ in [0,1] if the pixel is outside. c+ and c- may change depending on the image fed to the algorithm.
 	 */
-	GridFunction solve(const GridFunction &image, size_t max_iteration=100);
+	GridFunction solve(const GridFunction &image);
 
 private:
 	/**

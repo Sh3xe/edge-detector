@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cassert>
 
-GridFunction EdgeDetector::solve(const GridFunction &image, size_t max_iteration)
+GridFunction EdgeDetector::solve(const GridFunction &image)
 {
 	double tho=1e10;
 	size_t current_iteration = 0;
@@ -13,7 +13,7 @@ GridFunction EdgeDetector::solve(const GridFunction &image, size_t max_iteration
 
 	GridFunction phi_new(phi_current);
 
-	while(tho > m_parameters.tolerance && current_iteration < max_iteration)
+	while(tho > m_parameters.tolerance && current_iteration < m_parameters.max_iterations)
 	{
 		// Compute C-, and C+
 		double c_positive = image.C_positive(phi_current);
@@ -23,16 +23,22 @@ GridFunction EdgeDetector::solve(const GridFunction &image, size_t max_iteration
 		phi_new = calc_step(phi_current,image,c_positive,c_negative,phi_new);
 
 		// Calculate the error
-		tho = img_distance(phi_current, phi_new);
+		tho = img_distance(discretize_colors(phi_current), discretize_colors(phi_new));
 
 		// One step
 		++current_iteration;
 		phi_current = phi_new;
 
-		if(current_iteration % 10 == 0)
+		// Log the result if required
+		if(m_parameters.log_iterations && current_iteration % 5 == 0)
 		{
-			std::cout << tho << " " << m_parameters.tolerance << " " << current_iteration << " " << max_iteration << std::endl;
-			phi_new.save_to_pgm(std::string("inter") + std::to_string(current_iteration) + std::string(".pgm"));
+			std::cout << "Iteration: " << current_iteration << "/" << m_parameters.max_iterations << ". ";
+			std::cout << "Distance between consecutive iterations: " << tho << std::endl;
+
+			if(m_parameters.save_iter)
+			{
+				phi_new.save_to_pgm("inter" + std::to_string(current_iteration) + std::string(".pgm"));
+			}
 		}
 	}
 

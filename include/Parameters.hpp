@@ -8,20 +8,30 @@ struct GridParameters
 {
     double epsilon=0.2;
 
-    // Larger values of mu will detect less noise
-    double mu=0.5;
-    double v=0.1;
+    // weight associated with border length cost
+    double mu=0.1;
 
-    double lambda_1=0.5;
-    double lambda_2=0.5;
+    // Weight
+    double v=0.0;
+
+    // Interior area cost
+    double lambda_1=1.2;
+
+    // Exterior area cost
+    double lambda_2=1.2;
 
     // Minimum loss function value allowed for an image to be considered solution
-    double tolerance=3.5;
+    double tolerance=10.0;
 
-    double delta_t = 0.1;
+    double delta_t = 0.7;
 
-    // 
     double eta = 0.1;
+
+    size_t max_iterations = 100;
+
+    bool log_iterations = false;
+
+    bool save_iter = false;
 };
 
 double Heaviside(const GridParameters& Image,const double x);
