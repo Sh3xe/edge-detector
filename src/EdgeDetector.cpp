@@ -5,12 +5,20 @@
 
 GridFunction EdgeDetector::solve(const GridFunction &image, size_t max_iteration)
 {
+	
 	double tho=1e10;
 	size_t current_iteration = 0;
 
 	GridFunction phi_current = create_sin_image(image.get_width(), image.get_height(), 30.0, 0.0, 1.0);
 
+<<<<<<< Updated upstream
 	while(tho < m_parameters.tolerance && current_iteration < max_iteration)
+=======
+	GridFunction phi_new(phi_current);
+
+
+	while(tho > m_parameters.tolerance && current_iteration < max_iteration)
+>>>>>>> Stashed changes
 	{
 		// Compute C-, and C+
 		double c_positive = image.C_positive(phi_current);
@@ -25,9 +33,27 @@ GridFunction EdgeDetector::solve(const GridFunction &image, size_t max_iteration
 		// One step
 		++current_iteration;
 		phi_current = phi_new;
+<<<<<<< Updated upstream
 	}
 
 	return phi_current;
+=======
+
+		if(current_iteration % 10 == 0)
+		{
+			std::cout << tho << " " << m_parameters.tolerance << " " << current_iteration << " " << max_iteration << std::endl;
+
+			phi_new.save_to_pgm(std::string("Images/inter") + std::to_string(current_iteration) + std::string(".pgm"));
+		}
+
+		
+	}
+
+	std::cout << "Number of iterations: " << current_iteration << " " << tho << " " << m_parameters.tolerance << std::endl;
+
+
+	return phi_new;
+>>>>>>> Stashed changes
 }
 
 double EdgeDetector::img_distance(const GridFunction &left, const GridFunction &right)

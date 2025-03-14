@@ -20,6 +20,7 @@ public:
 	 */
 	GridFunction solve(const GridFunction &image, size_t max_iteration=100);
 
+
 private:
 	/**
 	 * @brief Calculate the euclidian distance between image left and right
