@@ -212,7 +212,22 @@ private:
  */
 GridFunction create_circle_image(uint32_t img_size, double diam_percent=1.0, double outside_color = 0.0, double inside_color = 1.0);
 
+/**
+ * @brief Create an image with a sinusoidal values
+ * 
+ * @param width 
+ * @param height 
+ * @param frequency 
+ * @param range_min 
+ * @param range_max 
+ * @return GridFunction 
+ */
 GridFunction create_sin_image(uint32_t width, uint32_t height, double frequency, double range_min, double range_max);
 
-
+/**
+ * @brief The output image will only take 2 values (black or white). To be used on a noisy image
+ * 
+ * @param image 
+ * @return GridFunction black and white image
+ */
 GridFunction discretize_colors(const GridFunction &image);

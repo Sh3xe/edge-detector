@@ -40,57 +40,41 @@ double GridFunction::gradient_x(uint32_t x,uint32_t y, char a) const
 {
 	double Grad_x=0;
 
-
-	if(a == '+'){
-
-
-		if(x== m_width-1){
-
+	if(a == '+')
+	{
+		if(x== m_width-1)
+		{
 			Grad_x = 0;
-
-		}else{
-
+		}
+		else
+		{
 			Grad_x = (*this)(x+1,y) - (*this)(x,y);
-
 		}
-		
-
 	}
-
-	if(a== '-'){
-
-		if(x== 0){
-
+	if(a== '-')
+	{
+		if(x== 0)
+		{
 			Grad_x = 0;
-
-		}else{
-
-			Grad_x = (*this)(x-1,y) - (*this)(x,y);
-
 		}
-		
-
+		else
+		{
+			Grad_x = (*this)(x-1,y) - (*this)(x,y);
+		}
 	}
 
-
-	if(a=='0'){
-
-		if(x==0){
-			
+	if(a=='0')
+	{
+		if(x==0)
+		{
 			return gradient_x(x,y,'+');
 		}
-
-		if(x==m_width-1){
-
+		if(x==m_width-1)
+		{
 			return gradient_x(x,y,'-');
-
 		}
-
 		Grad_x =  ((*this)(x+1,y) - (*this)(x-1,y))/2;
-
 	}
-	
-
 	return Grad_x;
 }
 
@@ -98,72 +82,56 @@ double GridFunction::gradient_y(uint32_t x,uint32_t y,char a) const
 {
 	double Grad_y=0;
 
-	
-	if(a == '+'){
-
-		if(y== m_height-1){
-
+	if(a == '+')
+	{
+		if(y== m_height-1)
+		{
 			Grad_y = 0;
-
-		}else{
-
+		}
+		else
+		{
 			Grad_y = (*this)(x,y+1) - (*this)(x,y);
-
 		}
-		
-		
-
 	}
 
-	if(a== '-'){
-
-		if(y == 0){
-
+	if(a== '-')
+	{
+		if(y == 0)
+		{
 			Grad_y = 0;
-
-		}else{
-
-			Grad_y = (*this)(x,y-1) - (*this)(x,y);
-
 		}
-
+		else
+		{
+			Grad_y = (*this)(x,y-1) - (*this)(x,y);
+		}
 	}
 
-
-	if(a=='0'){
-
-		if(y==0){
-			
+	if(a=='0')
+	{
+		if(y==0)
+		{
 			return gradient_y(x,y,'+');
 		}
-
-		if(y==m_height-1){
-
+		if(y==m_height-1)
+		{
 			return gradient_y(x,y,'-');
-
 		}
 
-
-
 		Grad_y = ((*this)(x,y+1) - (*this)(x,y-1))/2;
-
 	}
 	
 	return Grad_y;
 }
 
-
 std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> GridFunction::Inside_Outside() const
 {
-
 	std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> Results;
 	std::vector<std::pair<uint32_t,uint32_t>> Points_1;
 	std::vector<std::pair<uint32_t,uint32_t>> Points_0;
 	std::pair<uint32_t,uint32_t> par;
 
-	
-
-	for(size_t i=0;i<m_data.size();i++){
+	for(size_t i=0;i<m_data.size();i++)
+	{
 		if(m_data[i]>0){
 
 			uint32_t j = (uint32_t)i;
@@ -177,13 +145,11 @@ std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> GridFunction::Insid
 			}
 			
 			x = j;
-
 			par = std::make_pair(x,y);
-
 			Points_1.push_back(par);
-
-		}else{
-
+		}
+		else
+		{
 			uint32_t j = (uint32_t)i;
 			uint32_t x =0;
 			uint32_t y =0;
@@ -195,13 +161,9 @@ std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> GridFunction::Insid
 			}
 			
 			x = j;
-
 			par = std::make_pair(x,y);
-
 			Points_0.push_back(par);
-
 		}
-		
 	}
 
 	Results[0] = Points_0;
@@ -213,7 +175,6 @@ std::map<uint32_t,std::vector<std::pair<uint32_t,uint32_t>>> GridFunction::Insid
 
 double GridFunction::C_positive(const GridFunction &phi) const
 {
-
 	double sum_numerator  =  0;
 	double sum_denominator = 0;
 	double epsilon = 2.220446049250313e-16; 
@@ -224,22 +185,16 @@ double GridFunction::C_positive(const GridFunction &phi) const
 
 	sum_denominator = (double)Points_1.size() + epsilon;
 
-	for(uint32_t i =0; i< Points_1.size();i++){
-
+	for(uint32_t i =0; i< Points_1.size();i++)
+	{
 		sum_numerator = sum_numerator + (*this)(Points_1[i].first,Points_1[i].second);
-
 	}
-
 
 	return sum_numerator/sum_denominator;
 }
 
-
-
-
 double GridFunction::C_negative(const GridFunction &phi) const 
 {
-
 	double sum_numerator  =  0;
 	double sum_denominator = 0;
 	double epsilon = 2.220446049250313e-16; 
@@ -250,12 +205,10 @@ double GridFunction::C_negative(const GridFunction &phi) const
 
 	sum_denominator = (double)Points_0.size() + epsilon;
 
-	for(uint32_t i =0; i< Points_0.size();i++){
-
+	for(uint32_t i =0; i< Points_0.size();i++)
+	{
 		sum_numerator = sum_numerator + (*this)(Points_0[i].first,Points_0[i].second);
-
 	}
-
 
 	return sum_numerator/sum_denominator;
 }
@@ -263,95 +216,78 @@ double GridFunction::C_negative(const GridFunction &phi) const
 
 //FIRST METHOD TO SOLVE THE ARTICLE , IN THE EXPLICT WAY:
 
-GridFunction GridFunction::Gradient_x_pos() const{
-
+GridFunction GridFunction::Gradient_x_pos() const
+{
 	GridFunction phi(m_width, m_height);
 
-	for(uint32_t i=0;i<m_width;i++){
-
-		for(uint32_t j=0;j<m_height;j++){
-
+	for(uint32_t i=0;i<m_width;i++)
+	{
+		for(uint32_t j=0;j<m_height;j++)
+		{
 			phi(i,j)= (*this).gradient_x(i,j,'+');
-
 		}
-
 	}
 
 	return phi;
 };
 
-GridFunction GridFunction::Gradient_x_neg() const{
-
+GridFunction GridFunction::Gradient_x_neg() const
+{
 	GridFunction phi(m_width, m_height);
 
-	for(uint32_t i=0;i<m_width;i++){
-
-		for(uint32_t j=0;j<m_height;j++){
-
+	for(uint32_t i=0;i<m_width;i++)
+	{
+		for(uint32_t j=0;j<m_height;j++)
+		{
 			phi(i,j)= (*this).gradient_x(i,j,'-');
-
 		}
-
 	}
-
 	return phi;
-
 }
 
-GridFunction GridFunction::Gradient_x_neu() const{
-
+GridFunction GridFunction::Gradient_x_neu() const
+{
 	GridFunction phi(m_width, m_height);
 
-	for(uint32_t i=0;i<m_width;i++){
-
-		for(uint32_t j=0;j<m_height;j++){
-
+	for(uint32_t i=0;i<m_width;i++)
+	{
+		for(uint32_t j=0;j<m_height;j++)
+		{
 			phi(i,j)= 2*(*this).gradient_x(i,j,'0');
-
 		}
-
 	}
 
 	return phi;
-
 }
 
-GridFunction GridFunction::operator ^ (double x){
-
+GridFunction GridFunction::operator ^ (double x)
+{
 	GridFunction phi(m_width, m_height);
 
-	for(uint32_t i=0;i<m_width;i++){
-
-		for(uint32_t j=0;j<m_height;j++){
-
+	for(uint32_t i=0;i<m_width;i++)
+	{
+		for(uint32_t j=0;j<m_height;j++)
+		{
 			phi(i,j)= pow((*this)(i,j),x);
-
 		}
-
 	}
-
 	return phi;
-
 }
 
-GridFunction GridFunction::operator /(GridFunction phi_2){
-
+GridFunction GridFunction::operator /(GridFunction phi_2)
+{
 	GridFunction phi(m_width, m_height);
 
-	for(uint32_t i=0;i<m_width;i++){
-
-		for(uint32_t j=0;j<m_height;j++){
-
+	for(uint32_t i=0;i<m_width;i++)
+	{
+		for(uint32_t j=0;j<m_height;j++)
+		{
 			phi(i,j)= phi(i,j)/phi_2(i,j);
-
 		}
-
 	}
 
 	return phi;
-
 }
-
 
 bool GridFunction::save_to_pgm(const std::string &path)
 {

@@ -64,8 +64,11 @@ double EdgeDetector::img_distance(const GridFunction &left, const GridFunction &
 
 GridFunction EdgeDetector::calc_step(const GridFunction &phi_old,const GridFunction &image,double C_positive,double C_negative,GridFunction &phi)
 {
-	for(uint32_t i=1;i<phi.get_width()-1;i++){
-		for(uint32_t j=1;j<phi.get_height()-1;j++){
+	// Inside
+	for(uint32_t i=1;i<phi.get_width()-1;i++)
+	{
+		for(uint32_t j=1;j<phi.get_height()-1;j++)
+		{
 			double v1 = m_parameters.mu*phi_old.gradient_x(i,j,'+');
 			double v2 = sqrt(4*pow(phi_old.gradient_y(i,j,'0'),2)+pow(phi_old.gradient_x(i,j,'+'),2)+pow(m_parameters.eta,2));
 
@@ -88,12 +91,15 @@ GridFunction EdgeDetector::calc_step(const GridFunction &phi_old,const GridFunct
 		}
 	}
 
-	for(uint32_t i=0;i<phi.get_width();i++){
+	// Borders
+	for(uint32_t i=0;i<phi.get_width();i++)
+	{
 		phi(i,0) = phi(i,1);
 		phi(i,phi.get_height()-1) = phi(i,phi.get_height()-2);
 	}
 
-	for(uint32_t j=0;j<phi.get_height();j++){
+	for(uint32_t j=0;j<phi.get_height();j++)
+	{
 		phi(0,j) = phi(1,j);
 		phi(phi.get_width()-1,j) = phi(phi.get_width()-2,j);
 	}

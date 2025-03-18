@@ -2,8 +2,6 @@
 #include<math.h>
 #include<stdio.h>
 
-const float eps = 0.00001;
-
 struct GridParameters
 {
     double epsilon=0.2;
@@ -34,6 +32,20 @@ struct GridParameters
     bool save_iter = false;
 };
 
-double Heaviside(const GridParameters& Image,const double x);
+/**
+ * @brief Mathematical heavyside function calculated with an estimation of parameters.epsilon
+ * 
+ * @param parameters 
+ * @param x 
+ * @return double 
+ */
+double Heaviside(const GridParameters& parameters ,const double x);
 
-double Dirac(const GridParameters& Image,const double x);
+/**
+ * @brief Mathematical Dirac function calculated with an estimation of parameters.epsilon
+ * 
+ * @param parameters 
+ * @param x 
+ * @return double 
+ */
+double Dirac(const GridParameters& parameters ,const double x);

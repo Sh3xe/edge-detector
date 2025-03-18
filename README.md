@@ -16,8 +16,8 @@ This repository implements the method developed in "Active Contours Without Edge
 
 Input|Output
 -|-
-![Input image](./imgs/circle_in.png)|![Output image](imgs/circle_out.png)
-![Input image](./imgs/test_photographer.png) | ![Input image](./imgs/test_photographer.png)
+![Input image](./imgs/man1.png)|![Output image](imgs/man5.png)
+![Input image](./imgs/peng1.png) | ![Input image](./imgs/peng5.png)
 
 ## Parameters format
 

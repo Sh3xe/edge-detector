@@ -1,6 +1,7 @@
 #include "EdgeDetector.hpp"
 #include "Config.hpp"
 #include <iostream>
+#include <fstream>
 
 int main(int argc, char **argv)
 {    
